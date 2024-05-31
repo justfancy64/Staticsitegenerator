@@ -14,12 +14,16 @@ def generate_page(from_path, template_path, dest_path):
     markdown_content = from_file.read()
 
     template_file = open(template_path, "r")
-    template = template_path.read()
+    template = template_file.read()
     template_path.close()
 
-    html_node = markdown_to_html_node(markdown_content).TO_HTML
+    html_node = markdown_to_html_node(markdown_content)
+    html = html_node.TO_HTML
 
     title = extract_title(markdown_content)
+    template = template.replace("{{ Title }}", title)
+    template = template.replace("{{ content }}", html)
+
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path != "":
         os.mkdir(dest_dir_path, exist_ok = True)
