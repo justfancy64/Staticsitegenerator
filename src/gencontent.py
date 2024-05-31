@@ -9,23 +9,24 @@ def extract_title(md):
     raise ValueError("no title")
 
 def generate_page(from_path, template_path, dest_path):
-    print(f"generating page from {from_path} to {dest_path} using {template_path}")
+    print(f" * {from_path} {template_path} -> {dest_path}")
     from_file = open(from_path, "r")
     markdown_content = from_file.read()
+    from_file.close()
 
     template_file = open(template_path, "r")
     template = template_file.read()
-    template_path.close()
+    template_file.close()
 
-    html_node = markdown_to_html_node(markdown_content)
-    html = html_node.TO_HTML
+    node = markdown_to_html_node(markdown_content)
+    html = node.to_html()
 
     title = extract_title(markdown_content)
     template = template.replace("{{ Title }}", title)
-    template = template.replace("{{ content }}", html)
+    template = template.replace("{{ Content }}", html)
 
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path != "":
-        os.mkdir(dest_dir_path, exist_ok = True)
+        os.makedirs(dest_dir_path, exist_ok=True)
     to_file = open(dest_path, "w")
     to_file.write(template)
